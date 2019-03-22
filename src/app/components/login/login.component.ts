@@ -16,6 +16,8 @@ export class LoginComponent implements OnInit {
   public identity;
 
   constructor(
+    private _route: ActivatedRoute,
+    private _router: Router,
     private _userService: UserService
   ) {
     this.title = 'Identificate';
@@ -24,9 +26,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     console.log('login.component cargado correctamente !!');
-
-    const user = this._userService.getIdentity();
-    console.log(user.name);
+    this.logout();
   }
 
   onSubmit(form) {
@@ -45,16 +45,34 @@ export class LoginComponent implements OnInit {
 
           },
           error => {
-            console.log(<any> error);
+            console.log(error as any);
           }
 
         );
 
       },
       error => {
-        console.log(<any> error);
+        console.log(error as any);
       }
 
     );
+  }
+
+  logout() {
+    this._route.params.subscribe(params => {
+      const logout = + params['sure'];
+
+      if (logout == 1) {
+        localStorage.removeItem('identity');
+        localStorage.removeItem('token');
+
+        this.identity = null;
+        this.token = null;
+
+        // redirección
+        this._router.navigate(['inicio']);
+      }
+
+    });
   }
 }

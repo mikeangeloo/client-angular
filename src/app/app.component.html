@@ -7,7 +7,7 @@
 
     <div class="collapse navbar-collapse" id="menu">
       <ul class="nav navbar-nav">
-        <li><a href="">Inicio</a></li>
+        <li><a [routerLink] = "['']">Inicio</a></li>
         <li *ngIf="identity"><a href="">Crear coche</a></li>
       </ul>
 
@@ -19,7 +19,7 @@
       <ul class="nav navbar-nav navbar pull-right" *ngIf="identity">
         <li><a href="#">{{identity.name + ' ' + identity.surname}}</a></li>
         <li>
-          <a [routerLink] = "['registro']">
+          <a [routerLink] = "['logout', 1]">
             <span class="glyphicon glyphicon-log-out"></span>
             Salir
           </a>
