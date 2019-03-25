@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   public user: User;
   public token;
   public identity;
+  public status: string;
 
   constructor(
     private _route: ActivatedRoute,
@@ -34,22 +35,30 @@ export class LoginComponent implements OnInit {
     this._userService.signup(this.user).subscribe(
       response => {
         // Token
-        this.token = response;
-        localStorage.setItem('token', this.token);
-        // Objeto usuario identificado
+        if(response.status != 'error') {
+          this.status = 'success';
+          this.token = response;
+          localStorage.setItem('token', this.token);
+          // Objeto usuario identificado
 
-        this._userService.signup(this.user, true).subscribe(
-          response => {
-            this.identity = response;
-            localStorage.setItem('identity', JSON.stringify(this.identity));
+          this._userService.signup(this.user, true).subscribe(
+            response => {
+              this.identity = response;
+              localStorage.setItem('identity', JSON.stringify(this.identity));
 
-          },
-          error => {
-            console.log(error as any);
-          }
+              // Redirección
 
-        );
+              this._router.navigate(['home']);
 
+            },
+            error => {
+              console.log(error as any);
+            }
+
+          );
+        } else {
+          this.status = 'error';
+        }
       },
       error => {
         console.log(error as any);
@@ -60,7 +69,7 @@ export class LoginComponent implements OnInit {
 
   logout() {
     this._route.params.subscribe(params => {
-      const logout = + params['sure'];
+      const logout = + params.sure;
 
       if (logout == 1) {
         localStorage.removeItem('identity');
